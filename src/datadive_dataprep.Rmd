@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 	fig.width = 12,
 	message = FALSE,
 	warning = FALSE,
-	echo = TRUE,
+	echo = FALSE,
 	results = "asis"
 	)
 ```
@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(lubridate)
 library(modelr)
-library(anytime)
 
 in_path <- "../input/"
 out_path <- "../output/"
