@@ -1,0 +1,80 @@
+---
+title: "Data Preparation"
+output: html_notebook
+author: "Team HafenJungs"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+	fig.height = 10,
+	fig.width = 12,
+	message = FALSE,
+	warning = FALSE,
+	echo = TRUE,
+	results = "asis"
+	)
+```
+
+
+## Look at the data
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(modelr)
+library(anytime)
+
+in_path <- "../input/"
+out_path <- "../output/"
+
+nettebad_test <- read_csv(paste0(in_path, "nettebad_test_set.csv"))
+weather_dwd_test <- read_csv(paste0(in_path, "weather_dwd_test_set.csv"))
+weather_uni_osnabrueck_test <- read_csv(paste0(in_path, "weather_uni_osnabrueck_test_set.csv"))
+nettebad_train <- read_csv(paste0(in_path, "nettebad_train_set.csv"))
+weather_dwd_train <- read_csv(paste0(in_path, "weather_dwd_train_set.csv"))
+weather_uni_osnabrueck_train <- read_csv(paste0(in_path, "weather_uni_osnabrueck_train_set.csv"))
+sample_submission_nettebad <- read_csv(paste0(in_path, "sample_submission_nettebad.csv"))
+
+```
+
+## Prepare Data
+
+```{r}
+nettebad_train <- nettebad_train %>%
+  mutate(date = mdy(date)) %>%
+  mutate(yr = year(date),
+         month = month(date),
+         day = day(date))
+
+nettebad_test <- nettebad_train %>%
+  mutate(date = mdy(date)) %>%
+  mutate(yr = year(date),
+         month = month(date),
+         day = day(date))
+```
+
+
+
+## Visualize Data: Visitors per day plots
+
+```{r}
+ggplot(nettebad_train, aes(y = visitors_pool_total, x = date)) +
+  geom_point() + theme_bw() + facet_wrap(~ yr, scales = "free") +
+  geom_smooth()
+```
+
+## Make Predictions
+
+
+### Mean
+
+```{r}
+
+hafen_submission_mean_visitors <- sample_submission_nettebad %>%
+  mutate(visitors_pool_total = mean(nettebad_train$visitors_pool_total))
+```
+
+```{r}
+write_csv(hafen_submission_mean_visitors, path = paste0(out_path,"hafen_submission_mean_visitors","csv"))
+```
+
