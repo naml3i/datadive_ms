@@ -75,6 +75,6 @@ hafen_submission_mean_visitors <- sample_submission_nettebad %>%
 ```
 
 ```{r}
-write_csv(hafen_submission_mean_visitors, path = paste0(out_path,"hafen_submission_mean_visitors","csv"))
+write_csv(hafen_submission_mean_visitors, path = paste0(out_path,"hafen_submission_mean_visitors",".csv"))
 ```
 
