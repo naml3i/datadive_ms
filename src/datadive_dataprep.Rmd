@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(lubridate)
 library(modelr)
+library(dplyr)
 
 in_path <- "../input/"
 out_path <- "../output/"
@@ -36,6 +37,7 @@ sample_submission_nettebad <- read_csv(paste0(in_path, "sample_submission_netteb
 
 ```
 
+
 ## Prepare Data
 
 ```{r}
@@ -45,11 +47,44 @@ nettebad_train <- nettebad_train %>%
          month = month(date),
          day = day(date))
 
-nettebad_test <- nettebad_train %>%
+nettebad_test <- nettebad_test %>%
   mutate(date = mdy(date)) %>%
   mutate(yr = year(date),
          month = month(date),
          day = day(date))
+
+
+weather_dwd_train <- weather_dwd_train %>%
+  mutate(date = mdy(date)) %>%
+  mutate(yr = year(date),
+         month = month(date),
+         day = day(date))
+
+weather_dwd_test <- weather_dwd_test %>%
+  mutate(date = mdy(date)) %>%
+  mutate(yr = year(date),
+         month = month(date),
+         day = day(date))
+
+weather_uni_osnabrueck_train <- weather_uni_osnabrueck_train %>%
+  mutate(date = mdy(date)) %>%
+  mutate(yr = year(date),
+         month = month(date),
+         day = day(date))
+
+weather_uni_osnabrueck_test <- weather_uni_osnabrueck_test %>%
+  mutate(date = mdy(date)) %>%
+  mutate(yr = year(date),
+         month = month(date),
+         day = day(date))
+
+test_set <- left_join(nettebad_test,weather_uni_osnabrueck_test) %>%
+  left_join(.,weather_dwd_test)
+
+train_set <- left_join(nettebad_train,weather_uni_osnabrueck_train) %>%
+  left_join(.,weather_dwd_train)
+
+
 ```
 
 
@@ -75,5 +110,8 @@ hafen_submission_mean_visitors <- sample_submission_nettebad %>%
 
 ```{r}
 write_csv(hafen_submission_mean_visitors, path = paste0(out_path,"hafen_submission_mean_visitors",".csv"))
+
+write_csv(test_set, path = paste0(in_path,"test_set",".csv"))
+write_csv(train_set, path = paste0(in_path,"train_set",".csv"))
 ```
 
