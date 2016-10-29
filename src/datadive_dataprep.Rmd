@@ -106,4 +106,3 @@ write_csv(hafen_submission_mean_visitors, path = paste0(out_path,"hafen_submissi
 write_csv(test_set, path = paste0(in_path,"test_set",".csv"))
 write_csv(train_set, path = paste0(in_path,"train_set",".csv"))
 ```
-
